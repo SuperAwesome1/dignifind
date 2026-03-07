@@ -1,0 +1,22 @@
+{
+    "name": "dignifind",
+    "version": "1.0.0",
+    "private": true,
+    "description": "DigniFind monorepo — admin portal, public frontend, and legacy static site",
+    "workspaces": [
+        "dignifind-admin",
+        "dignifind-frontend",
+        "dignifind-legacy"
+    ],
+    "scripts": {
+        "admin": "npm run start --workspace=dignifind-admin",
+        "frontend": "npm run start --workspace=dignifind-frontend",
+        "build:admin": "npm run build --workspace=dignifind-admin",
+        "build:frontend": "npm run build --workspace=dignifind-frontend",
+        "install:all": "npm install"
+    },
+    "engines": {
+        "node": ">=20.0.0",
+        "npm": ">=10.0.0"
+    }
+}

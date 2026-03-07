@@ -1,0 +1,12 @@
+# Monorepo root
+node_modules/
+.angular/
+dist/
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
