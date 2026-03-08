@@ -1,0 +1,92 @@
+<app-navbar [profile]="profileService.profile()" />
+
+<!-- Loading State -->
+@if (funeralService.loading()) {
+<div class="loading-screen">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <p>Loading service programme...</p>
+  </div>
+</div>
+}
+
+<!-- Error State -->
+@if (!funeralService.loading() && funeralService.error()) {
+<div class="error-screen">
+  <div class="error-content text-center">
+    <span class="error-icon">🕊️</span>
+    <h2>{{ funeralService.error() }}</h2>
+    <p>Please check the link and try again.</p>
+  </div>
+</div>
+}
+
+<!-- Main Content -->
+@if (!funeralService.loading() && !funeralService.error() && funeralService.funeralData()) {
+<main class="page-content">
+
+  <!-- Hero Section -->
+  <app-hero [data]="funeralService.funeralData()" />
+
+  <div class="container content-container">
+
+    <!-- Funeral / Memorial Tab Switcher -->
+    @if (hasBothTabs) {
+    <div class="tab-buttons text-center">
+      <button class="tab-btn" [class.active]="activeTab() === 'funeral'" (click)="showFuneralDetails()">Funeral
+        Details</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'memorial'" (click)="showMemorialDetails()">Memorial
+        Details</button>
+    </div>
+    }
+
+    <!-- Funeral Details -->
+    @if (showFuneral) {
+    <app-funeral-details [data]="funeralService.funeralData()" />
+    }
+
+    <!-- Memorial Details -->
+    @if (showMemorial) {
+    <app-memorial-details [data]="funeralService.funeralData()" />
+    }
+
+    <!-- Streaming -->
+    <app-streaming [data]="funeralService.funeralData()" [showFuneralStream]="showFuneralStream"
+      [showMemorialStream]="showMemorialStream" />
+
+    <!-- Powered By -->
+    <div class="powered-by-inline text-center">
+      <hr class="brand-hr" />
+      <strong>Powered by <a href="http://dignifind.co.za" target="_blank"
+          rel="noopener">www.dignifind.co.za</a></strong>
+      <hr class="brand-hr" />
+    </div>
+
+    <!-- Vote of Thanks -->
+    <app-vote-of-thanks [data]="funeralService.funeralData()" />
+
+    <!-- Funeral Programme Accordion -->
+    @if (showFuneral) {
+    <app-programme-accordion [data]="funeralService.funeralData()" />
+    }
+
+    <!-- Memorial Programme Accordion -->
+    @if (showMemorial) {
+    <app-memorial-programme-accordion [data]="funeralService.funeralData()" />
+    }
+
+  </div>
+
+  <!-- Inform Others -->
+  <div class="container">
+    <app-inform-others />
+  </div>
+
+  <!-- Say Goodbye -->
+  <app-tributes />
+
+</main>
+}
+
+<!-- Footer always visible -->
+<app-footer />

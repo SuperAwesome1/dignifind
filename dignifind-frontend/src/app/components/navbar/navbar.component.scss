@@ -1,0 +1,41 @@
+#mainNav {
+    background-color: rgba(255, 255, 255, 0.96);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    min-height: 56px;
+}
+
+.navbar-logo {
+    max-height: 44px;
+    max-width: 280px;
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-text-logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+
+    .logo-dignify {
+        color: #27345C;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+    }
+
+    .logo-find {
+        color: #C49847;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+    }
+}

@@ -1,1 +1,142 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================
+   Global Styles — Dignifind Frontend
+   Brand defaults: #C49847 (gold), #27345C (navy)
+   Typography driven by --typo-* CSS vars set by ProfileService
+   ========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@300;400;600&family=Roboto:wght@300;400;700&family=Open+Sans:wght@400;600&family=Montserrat:wght@400;600&family=Playfair+Display:wght@400;700&family=Merriweather:wght@300;400&family=Dancing+Script:wght@400;600&family=Cinzel:wght@400;600&display=swap');
+
+/* Default CSS variables — overridden at runtime by ProfileService */
+:root {
+    --typo-h1-font: 'Times New Roman', serif;
+    --typo-h1-color: #C49847;
+    --typo-h2-font: 'Times New Roman', serif;
+    --typo-h2-color: #27345C;
+    --typo-h3-font: 'Times New Roman', serif;
+    --typo-h3-color: #000000;
+    --typo-h4-font: 'Times New Roman', serif;
+    --typo-h4-color: #000000;
+    --typo-p-font: 'Lato', sans-serif;
+    --typo-p-color: #333333;
+    --typo-hr-color: #C49847;
+    --profile-bg-url: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--typo-p-font);
+    color: var(--typo-p-color);
+    min-height: 100%;
+    width: 100%;
+}
+
+/* Default atmospheric gradient background */
+body::before {
+    content: '';
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    background: linear-gradient(135deg, #f8f5ee 0%, #eae4d4 40%, #ddd5c0 100%);
+}
+
+/* Profile background image — applied when provider has backgroundUrl */
+body.has-profile-bg::before {
+    background: var(--profile-bg-url) center center / cover no-repeat;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* Text utilities */
+.text-center {
+    text-align: center;
+}
+
+/* Headings — driven by profile typography */
+h1 {
+    font-family: var(--typo-h1-font);
+    color: var(--typo-h1-color);
+    line-height: 1.3;
+}
+
+h2 {
+    font-family: var(--typo-h2-font);
+    color: var(--typo-h2-color);
+    line-height: 1.3;
+}
+
+h3 {
+    font-family: var(--typo-h3-font);
+    color: var(--typo-h3-color);
+    line-height: 1.3;
+}
+
+h4 {
+    font-family: var(--typo-h4-font);
+    color: var(--typo-h4-color);
+    line-height: 1.3;
+}
+
+p {
+    font-family: var(--typo-p-font);
+    color: var(--typo-p-color);
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+}
+
+a {
+    transition: color 0.25s;
+    color: #27345C;
+    text-decoration: none;
+
+    &:hover {
+        color: #C49847;
+    }
+}
+
+hr {
+    border: none;
+    border-top: 3px solid var(--typo-hr-color);
+    max-width: 90px;
+    margin: 24px auto;
+}
+
+section {
+    padding: 40px 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--typo-hr-color);
+    border-radius: 3px;
+}

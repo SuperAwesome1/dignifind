@@ -1,0 +1,141 @@
+.about-section {
+  padding: 0px 0 20px 0;
+}
+
+.spacer {
+  height: 80px;
+}
+
+.in-loving-memory {
+  color: #C49847;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+}
+
+.our-team {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-wrapper {
+  margin: 10px 0 20px 0;
+}
+
+.carousel-container {
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+
+.carousel-img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.carousel-slide {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.carousel-btn {
+  background: rgba(196, 152, 71, 0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #b8873a;
+  }
+}
+
+.carousel-dots {
+  text-align: center;
+  margin-top: 10px;
+
+  .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &.active {
+      background: #C49847;
+    }
+  }
+}
+
+.no-photo {
+  background: #f8f5ee;
+  border: 2px dashed #C49847;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+
+  span {
+    font-size: 3rem;
+  }
+
+  p {
+    margin-top: 10px;
+    font-style: italic;
+  }
+}
+
+.member-des {
+  padding: 10px 0 10px;
+}
+
+.deceased-name {
+  color: #000;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.date-line {
+  color: #333;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1rem;
+  margin: 4px 0;
+  letter-spacing: 0.5px;
+}
+
+.unveiling-date {
+  color: #27345C;
+  margin-top: 10px;
+}
+
+.brand-hr {
+  border-color: #C49847;
+  border-width: 3px;
+  max-width: 90px;
+  margin: 20px auto;
+}
