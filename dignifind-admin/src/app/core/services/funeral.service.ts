@@ -71,6 +71,13 @@ export class FuneralService {
         );
     }
 
+    async graveNumberExists(graveNumber: string): Promise<boolean> {
+        const user = await this.authService.user$.pipe(filter(u => u !== null), take(1)).toPromise();
+        const funeralRef = ref(this.db, `funerals/${user!.uid}/${graveNumber}`);
+        const snap = await runInInjectionContext(this.injector, () => get(funeralRef));
+        return snap.exists();
+    }
+
     async deleteFuneral(id: string): Promise<void> {
         const user = await this.authService.user$.pipe(filter(u => u !== null), take(1)).toPromise();
         const funeralRef = ref(this.db, `funerals/${user!.uid}/${id}`);

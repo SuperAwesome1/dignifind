@@ -306,9 +306,21 @@ export class FuneralFormComponent implements OnInit {
     this.selectedFile = (event.target as HTMLInputElement).files?.[0] ?? null;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     this.loading = true;
+    this.error = '';
+
+    // On create only: check the grave number isn't already taken
+    if (!this.isEdit) {
+      const graveNumber = this.form.value.graveNumber?.trim();
+      const exists = await this.funeralService.graveNumberExists(graveNumber).catch(() => false);
+      if (exists) {
+        this.error = `Grave number "${graveNumber}" already exists. Please use a different number.`;
+        this.loading = false;
+        return;
+      }
+    }
 
     const save = (pictureUrl?: string) => {
       const v = this.form.value;

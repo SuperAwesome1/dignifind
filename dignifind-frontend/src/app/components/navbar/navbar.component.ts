@@ -10,7 +10,7 @@ import { ProfileData } from '../../models/profile.model';
     <nav id="mainNav" class="navbar">
       <div class="navbar-inner">
         @if (profile?.logoUrl) {
-          <a href="/">
+          <a href="/" style="display:block;width:100%;">
             <img [src]="profile!.logoUrl" alt="Provider Logo" class="navbar-logo" />
           </a>
         } @else {

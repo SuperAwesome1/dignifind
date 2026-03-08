@@ -8,6 +8,14 @@ export interface TypographyStyle {
     color: string;
 }
 
+export interface SocialPages {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    linkedin?: string;
+    youtube?: string;
+}
+
 export interface ProfileData {
     backgroundUrl?: string;
     logoUrl?: string;
@@ -15,6 +23,11 @@ export interface ProfileData {
     backgroundPath?: string;
     logoPath?: string;
     headerPath?: string;
+    contactNumber?: string;
+    emergencyNumber?: string;
+    whatsappNumber?: string;
+    email?: string;
+    socialPages?: SocialPages;
     typography?: {
         h1: TypographyStyle;
         h2: TypographyStyle;

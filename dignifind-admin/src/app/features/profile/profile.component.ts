@@ -2,29 +2,29 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { ProfileService, ProfileData, TypographyStyle, DEFAULT_TYPOGRAPHY, FONT_OPTIONS } from '../../core/services/profile.service';
+import { ProfileService, ProfileData, SocialPages, TypographyStyle, DEFAULT_TYPOGRAPHY, FONT_OPTIONS } from '../../core/services/profile.service';
 import { StorageService, UploadEvent } from '../../core/services/storage.service';
 import { AuthService } from '../../core/services/auth.service';
 import { filter, take } from 'rxjs/operators';
 
 interface ImageSlot {
-    key: 'background' | 'logo' | 'header';
-    label: string;
-    hint: string;
-    icon: string;
-    url: string;
-    progress: number;
-    uploading: boolean;
+  key: 'background' | 'logo' | 'header';
+  label: string;
+  hint: string;
+  icon: string;
+  url: string;
+  progress: number;
+  uploading: boolean;
 }
 
 const TYPOGRAPHY_TAGS = ['h1', 'h2', 'h3', 'h4', 'p', 'hr'] as const;
 type TypoTag = typeof TYPOGRAPHY_TAGS[number];
 
 @Component({
-    selector: 'app-profile',
-    standalone: true,
-    imports: [CommonModule, FormsModule, NavbarComponent],
-    styles: [`
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NavbarComponent],
+  styles: [`
         .profile-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         @media(min-width:900px) { .profile-grid { grid-template-columns: 1fr 1fr; } }
 
@@ -104,8 +104,48 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
         .save-overlay {
             position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500;
         }
+        .df-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+        }
+        .df-input-group label {
+            font-size: .78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--text-muted);
+        }
+        .df-input-group input {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: .45rem .75rem;
+            font-size: .88rem;
+            font-family: var(--font);
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color .15s;
+            &:focus { border-color: var(--primary); }
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media(min-width:640px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        @media(min-width:640px) { .social-grid { grid-template-columns: 1fr 1fr; } }
+        .social-icon { font-size: 1.1rem; vertical-align: middle; margin-right: .35rem; }
     `],
-    template: `
+  template: `
     <app-navbar></app-navbar>
 
     <main class="df-page">
@@ -154,6 +194,53 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
                 </div>
               </div>
             }
+          </div>
+        </div>
+
+        <!-- ── Contact Details ─────────────────────────────── -->
+        <div class="df-card" style="margin-bottom:1.5rem">
+          <p class="section-label">Contact Details</p>
+          <div class="contact-grid">
+            <div class="df-input-group">
+              <label>📞 Contact Number</label>
+              <input type="tel" [(ngModel)]="contact.contactNumber" (ngModelChange)="markDirty()" placeholder="e.g. +27 11 000 0000" />
+            </div>
+            <div class="df-input-group">
+              <label>🚨 Emergency Number</label>
+              <input type="tel" [(ngModel)]="contact.emergencyNumber" (ngModelChange)="markDirty()" placeholder="e.g. +27 82 000 0000" />
+            </div>
+            <div class="df-input-group">
+              <label>💬 WhatsApp Number</label>
+              <input type="tel" [(ngModel)]="contact.whatsappNumber" (ngModelChange)="markDirty()" placeholder="e.g. +27 82 000 0000" />
+            </div>
+            <div class="df-input-group">
+              <label>✉️ Email Address</label>
+              <input type="email" [(ngModel)]="contact.email" (ngModelChange)="markDirty()" placeholder="info@example.com" />
+            </div>
+          </div>
+
+          <p style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:1.25rem 0 .5rem">Social Pages</p>
+          <div class="social-grid">
+            <div class="df-input-group">
+              <label><span class="social-icon">📘</span>Facebook</label>
+              <input type="url" [(ngModel)]="social.facebook" (ngModelChange)="markDirty()" placeholder="https://facebook.com/yourpage" />
+            </div>
+            <div class="df-input-group">
+              <label><span class="social-icon">📸</span>Instagram</label>
+              <input type="url" [(ngModel)]="social.instagram" (ngModelChange)="markDirty()" placeholder="https://instagram.com/yourpage" />
+            </div>
+            <div class="df-input-group">
+              <label><span class="social-icon">🐦</span>Twitter / X</label>
+              <input type="url" [(ngModel)]="social.twitter" (ngModelChange)="markDirty()" placeholder="https://x.com/yourpage" />
+            </div>
+            <div class="df-input-group">
+              <label><span class="social-icon">💼</span>LinkedIn</label>
+              <input type="url" [(ngModel)]="social.linkedin" (ngModelChange)="markDirty()" placeholder="https://linkedin.com/company/yourpage" />
+            </div>
+            <div class="df-input-group">
+              <label><span class="social-icon">▶️</span>YouTube</label>
+              <input type="url" [(ngModel)]="social.youtube" (ngModelChange)="markDirty()" placeholder="https://youtube.com/@yourchannel" />
+            </div>
           </div>
         </div>
 
@@ -242,109 +329,134 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
   `,
 })
 export class ProfileComponent implements OnInit {
-    private profileService = inject(ProfileService);
-    private storageService = inject(StorageService);
-    private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private storageService = inject(StorageService);
+  private authService = inject(AuthService);
 
-    loading = signal(true);
-    saving = signal(false);
-    saveError = signal('');
-    isDirty = false;
+  loading = signal(true);
+  saving = signal(false);
+  saveError = signal('');
+  isDirty = false;
 
-    readonly typoTags = [...TYPOGRAPHY_TAGS];
-    readonly fonts = FONT_OPTIONS;
+  readonly typoTags = [...TYPOGRAPHY_TAGS];
+  readonly fonts = FONT_OPTIONS;
 
-    typo: Record<string, Record<string, string>> = this.defaultTypo();
+  typo: Record<string, Record<string, string>> = this.defaultTypo();
 
-    imageSlots: ImageSlot[] = [
-        { key: 'background', label: 'Background Image', hint: 'full-page background', icon: '🖼️', url: '', progress: 0, uploading: false },
-        { key: 'logo', label: 'Logo', hint: 'company logo', icon: '🔖', url: '', progress: 0, uploading: false },
-        { key: 'header', label: 'Header Image', hint: 'page header banner', icon: '📸', url: '', progress: 0, uploading: false },
-    ];
+  contact: { contactNumber: string; emergencyNumber: string; whatsappNumber: string; email: string } = {
+    contactNumber: '', emergencyNumber: '', whatsappNumber: '', email: ''
+  };
+  social: SocialPages = {};
 
-    private uid = '';
+  imageSlots: ImageSlot[] = [
+    { key: 'background', label: 'Background Image', hint: 'full-page background', icon: '🖼️', url: '', progress: 0, uploading: false },
+    { key: 'logo', label: 'Logo', hint: 'company logo', icon: '🔖', url: '', progress: 0, uploading: false },
+    { key: 'header', label: 'Header Image', hint: 'page header banner', icon: '📸', url: '', progress: 0, uploading: false },
+  ];
 
-    async ngOnInit(): Promise<void> {
-        // Get UID
-        const user = await this.authService.user$.pipe(filter(u => u !== null), take(1)).toPromise();
-        this.uid = user!.uid;
+  private uid = '';
 
-        // Load saved profile
-        const profile = await this.profileService.getProfile();
-        if (profile.backgroundUrl) this.slot('background').url = profile.backgroundUrl;
-        if (profile.logoUrl) this.slot('logo').url = profile.logoUrl;
-        if (profile.headerUrl) this.slot('header').url = profile.headerUrl;
+  async ngOnInit(): Promise<void> {
+    // Get UID
+    const user = await this.authService.user$.pipe(filter(u => u !== null), take(1)).toPromise();
+    this.uid = user!.uid;
 
-        if (profile.typography) {
-            for (const tag of this.typoTags) {
-                const t = profile.typography[tag as keyof typeof profile.typography] as any;
-                if (t) this.typo[tag] = { ...this.typo[tag], ...t };
-            }
+    // Load saved profile
+    const profile = await this.profileService.getProfile();
+    if (profile.backgroundUrl) this.slot('background').url = profile.backgroundUrl;
+    if (profile.logoUrl) this.slot('logo').url = profile.logoUrl;
+    if (profile.headerUrl) this.slot('header').url = profile.headerUrl;
+
+    // Load contact fields
+    this.contact.contactNumber = profile.contactNumber ?? '';
+    this.contact.emergencyNumber = profile.emergencyNumber ?? '';
+    this.contact.whatsappNumber = profile.whatsappNumber ?? '';
+    this.contact.email = profile.email ?? '';
+    this.social = { ...profile.socialPages };
+
+    if (profile.typography) {
+      for (const tag of this.typoTags) {
+        const t = profile.typography[tag as keyof typeof profile.typography] as any;
+        if (t) this.typo[tag] = { ...this.typo[tag], ...t };
+      }
+    }
+
+    this.loading.set(false);
+  }
+
+  triggerFileInput(key: string): void {
+    (document.getElementById('file-' + key) as HTMLInputElement)?.click();
+  }
+
+  onFileChange(event: Event, slot: ImageSlot): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    slot.uploading = true;
+    slot.progress = 0;
+
+    const upload$ = slot.key === 'background'
+      ? this.storageService.uploadProfileBackground(file, this.uid)
+      : slot.key === 'logo'
+        ? this.storageService.uploadProfileLogo(file, this.uid)
+        : this.storageService.uploadProfileHeader(file, this.uid);
+
+    upload$.subscribe({
+      next: (evt: UploadEvent) => {
+        slot.progress = evt.progress;
+        if (evt.downloadURL) {
+          slot.url = evt.downloadURL;
+          slot.uploading = false;
+          this.isDirty = true;
+          // Auto-save the image URL immediately
+          const update: Record<string, string> = {};
+          update[`${slot.key}Url`] = evt.downloadURL;
+          if (evt.storagePath) update[`${slot.key}Path`] = evt.storagePath;
+          this.profileService.saveProfile(update as any).catch(e => this.saveError.set(e.message));
         }
+      },
+      error: (e: Error) => { slot.uploading = false; this.saveError.set(e.message); },
+    });
+  }
 
-        this.loading.set(false);
+  markDirty(): void { this.isDirty = true; }
+
+  async save(): Promise<void> {
+    this.saving.set(true);
+    this.saveError.set('');
+    try {
+      await this.profileService.saveProfile({
+        typography: this.typo as any,
+        contactNumber: this.contact.contactNumber || undefined,
+        emergencyNumber: this.contact.emergencyNumber || undefined,
+        whatsappNumber: this.contact.whatsappNumber || undefined,
+        email: this.contact.email || undefined,
+        socialPages: {
+          facebook: this.social.facebook || undefined,
+          instagram: this.social.instagram || undefined,
+          twitter: this.social.twitter || undefined,
+          linkedin: this.social.linkedin || undefined,
+          youtube: this.social.youtube || undefined,
+        },
+      });
+      this.isDirty = false;
+    } catch (e: any) {
+      this.saveError.set(e.message);
+    } finally {
+      this.saving.set(false);
     }
+  }
 
-    triggerFileInput(key: string): void {
-        (document.getElementById('file-' + key) as HTMLInputElement)?.click();
+  private slot(key: string): ImageSlot {
+    return this.imageSlots.find(s => s.key === key)!;
+  }
+
+  private defaultTypo(): Record<string, Record<string, string>> {
+    const d: Record<string, Record<string, string>> = {};
+    for (const tag of TYPOGRAPHY_TAGS) {
+      const defaults = DEFAULT_TYPOGRAPHY[tag] as any;
+      d[tag] = { color: defaults.color, fontFamily: defaults.fontFamily ?? '' };
     }
-
-    onFileChange(event: Event, slot: ImageSlot): void {
-        const file = (event.target as HTMLInputElement).files?.[0];
-        if (!file) return;
-
-        slot.uploading = true;
-        slot.progress = 0;
-
-        const upload$ = slot.key === 'background'
-            ? this.storageService.uploadProfileBackground(file, this.uid)
-            : slot.key === 'logo'
-                ? this.storageService.uploadProfileLogo(file, this.uid)
-                : this.storageService.uploadProfileHeader(file, this.uid);
-
-        upload$.subscribe({
-            next: (evt: UploadEvent) => {
-                slot.progress = evt.progress;
-                if (evt.downloadURL) {
-                    slot.url = evt.downloadURL;
-                    slot.uploading = false;
-                    this.isDirty = true;
-                    // Auto-save the image URL immediately
-                    const update: Record<string, string> = {};
-                    update[`${slot.key}Url`] = evt.downloadURL;
-                    if (evt.storagePath) update[`${slot.key}Path`] = evt.storagePath;
-                    this.profileService.saveProfile(update as any).catch(e => this.saveError.set(e.message));
-                }
-            },
-            error: (e: Error) => { slot.uploading = false; this.saveError.set(e.message); },
-        });
-    }
-
-    markDirty(): void { this.isDirty = true; }
-
-    async save(): Promise<void> {
-        this.saving.set(true);
-        this.saveError.set('');
-        try {
-            await this.profileService.saveProfile({ typography: this.typo as any });
-            this.isDirty = false;
-        } catch (e: any) {
-            this.saveError.set(e.message);
-        } finally {
-            this.saving.set(false);
-        }
-    }
-
-    private slot(key: string): ImageSlot {
-        return this.imageSlots.find(s => s.key === key)!;
-    }
-
-    private defaultTypo(): Record<string, Record<string, string>> {
-        const d: Record<string, Record<string, string>> = {};
-        for (const tag of TYPOGRAPHY_TAGS) {
-            const defaults = DEFAULT_TYPOGRAPHY[tag] as any;
-            d[tag] = { color: defaults.color, fontFamily: defaults.fontFamily ?? '' };
-        }
-        return d;
-    }
+    return d;
+  }
 }
