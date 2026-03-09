@@ -82,6 +82,8 @@
     display: flex;
     gap: 12px;
     justify-content: center;
+    flex-wrap: wrap;
+    /* ensures buttons stack elegantly on tiny screens */
     margin: 20px 0;
 }
 
