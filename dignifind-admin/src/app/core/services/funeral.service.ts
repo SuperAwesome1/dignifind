@@ -65,7 +65,19 @@ export class FuneralService {
     async saveFuneral(funeral: Partial<Funeral>): Promise<void> {
         const user = await this.authService.user$.pipe(filter(u => u !== null), take(1)).toPromise();
         const uid = user!.uid;
+
+        // Generate shortId if missing
+        if (!funeral.shortId) {
+            funeral.shortId = Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
         const funeralRef = ref(this.db, `funerals/${uid}/${funeral['graveNumber']}`);
+
+        // Save to central lookup for /s/:shortId redirects
+        const shortUpdate: Record<string, any> = {};
+        shortUpdate[`shortlinks/${funeral.shortId}`] = { uid, id: funeral['graveNumber'] };
+        await runInInjectionContext(this.injector, () => update(ref(this.db), shortUpdate));
+
         return runInInjectionContext(this.injector, () =>
             update(funeralRef, { ...funeral, user: uid })
         );

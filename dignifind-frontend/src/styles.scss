@@ -53,7 +53,7 @@ body::before {
 
 /* Profile background image — applied when provider has backgroundUrl */
 body.has-profile-bg::before {
-    background: var(--profile-bg-url) center center / cover no-repeat;
+    background: var(--profile-bg-url) center center / 100% 100% no-repeat;
 }
 
 /* Container */

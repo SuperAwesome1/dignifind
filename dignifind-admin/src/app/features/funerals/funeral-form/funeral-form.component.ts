@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FuneralService } from '../../../core/services/funeral.service';
 import { StorageService } from '../../../core/services/storage.service';
+import { ProfileService } from '../../../core/services/profile.service';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
 
 @Component({
@@ -81,6 +82,31 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
           Back
         </a>
       </div>
+
+      <!-- Share Links (Edit only) -->
+      @if (isEdit) {
+        <div class="df-card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
+          <p class="section-title">Program Links</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div>
+              <label style="font-size: .75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Clean Branding Link</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input class="df-input" style="flex: 1; font-weight: 500;" readonly [value]="getBrandedUrl()" />
+                <button type="button" class="df-btn df-btn-sm df-btn-ghost" (click)="copyLink(getBrandedUrl())">Copy</button>
+              </div>
+            </div>
+            @if (shortId) {
+                <div>
+                <label style="font-size: .75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Short Mobile Link</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input class="df-input" style="flex: 1; font-weight: 500; background: #f0f7ff;" readonly [value]="getShortUrl()" />
+                    <button type="button" class="df-btn df-btn-sm df-btn-ghost" (click)="copyLink(getShortUrl())">Copy</button>
+                </div>
+                </div>
+            }
+          </div>
+        </div>
+      }
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
@@ -257,12 +283,15 @@ export class FuneralFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private funeralService = inject(FuneralService);
   private storageService = inject(StorageService);
+  private profileService = inject(ProfileService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
   isEdit = false;
   loading = false;
   error = '';
+  slug = '';
+  shortId = '';
   private selectedFile: File | null = null;
 
   form: FormGroup = this.fb.group({
@@ -291,6 +320,7 @@ export class FuneralFormComponent implements OnInit {
       this.isEdit = true;
       const funeral = await this.funeralService.getFuneral(id);
       if (funeral) {
+        this.shortId = funeral.shortId ?? '';
         this.form.patchValue({
           ...funeral,
           dateOfBirth: this.epochToDateInput(funeral.dateOfBirth),
@@ -300,6 +330,25 @@ export class FuneralFormComponent implements OnInit {
         });
       }
     }
+
+    const profile = await this.profileService.getProfile();
+    this.slug = profile.slug || '';
+  }
+
+  getBrandedUrl(): string {
+    const host = window.location.origin.replace(':4200', ':4201');
+    const provider = this.slug || (this.funeralService as any).authService.uid; // fallback but ideally we have slug
+    return `${host}/${provider}/${this.form.value.graveNumber}`;
+  }
+
+  getShortUrl(): string {
+    const host = window.location.origin.replace(':4200', ':4201');
+    return `${host}/s/${this.shortId}`;
+  }
+
+  copyLink(url: string): void {
+    navigator.clipboard.writeText(url);
+    alert('Link copied to clipboard!');
   }
 
   onFile(event: Event): void {

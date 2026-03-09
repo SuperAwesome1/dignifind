@@ -43,13 +43,13 @@ export class ServiceProgrammeComponent implements OnInit {
 
     activeTab = signal<'funeral' | 'memorial'>('funeral');
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         const provider = this.route.snapshot.paramMap.get('provider') ?? DEFAULT_PROVIDER;
         const funeralId = this.route.snapshot.paramMap.get('funeralId') ?? '';
 
-        // Load profile branding and funeral data in parallel
-        this.profileService.loadProfile(provider);
-        this.funeralService.loadFuneral(provider, funeralId);
+        // Load profile branding and get the real UID (resolving slugs if needed)
+        const uid = await this.profileService.loadProfile(provider);
+        this.funeralService.loadFuneral(uid, funeralId);
     }
 
     showFuneralDetails(): void { this.activeTab.set('funeral'); }

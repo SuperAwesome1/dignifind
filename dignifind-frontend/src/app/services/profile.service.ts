@@ -7,13 +7,27 @@ export class ProfileService {
     private db = inject(Database);
 
     readonly profile = signal<ProfileData | null>(null);
+    readonly resolvedProviderId = signal<string | null>(null);
 
-    async loadProfile(providerId: string): Promise<void> {
-        const profileRef = ref(this.db, `profiles/${providerId}`);
+    async loadProfile(providerId: string): Promise<string> {
+        let uid = providerId;
+
+        // Try to resolve slug if it's not a standard UID (Firebase UIDs are 28 chars)
+        if (providerId.length < 20 || !/[0-9].*[a-zA-Z]|[a-zA-Z].*[0-9]/.test(providerId)) {
+            const slugRef = ref(this.db, `slugs/${providerId.toLowerCase()}`);
+            const slugSnap = await get(slugRef);
+            if (slugSnap.exists()) {
+                uid = slugSnap.val();
+            }
+        }
+
+        this.resolvedProviderId.set(uid);
+        const profileRef = ref(this.db, `profiles/${uid}`);
         const snap = await get(profileRef);
         const data: ProfileData = snap.exists() ? (snap.val() as ProfileData) : {};
         this.profile.set(data);
         this.applyBranding(data);
+        return uid;
     }
 
     private applyBranding(data: ProfileData): void {

@@ -65,6 +65,7 @@ export interface Funeral {
     user?: string;
     graveCaptured?: boolean;
     homeCaptured?: boolean;
+    shortId?: string;
 }
 
 export interface Provider {
