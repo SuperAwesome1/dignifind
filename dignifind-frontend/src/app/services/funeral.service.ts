@@ -40,11 +40,14 @@ export class FuneralService {
     }
 
     convertDate(epoch: number | string | undefined): string {
-        if (!epoch) return '';
-        if (isNaN(Number(epoch))) {
+        if (epoch == null || epoch === '') return '';
+        const strVal = String(epoch).trim();
+        if (strVal === '') return '';
+        const num = Number(strVal);
+        if (isNaN(num)) {
             return String(epoch);
         }
-        const d = new Date(Number(epoch));
+        const d = new Date(num);
         return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
     }
 

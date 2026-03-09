@@ -129,8 +129,10 @@ export class FuneralListComponent implements OnInit {
 
   formatDate(val: string | undefined): string {
     if (!val) return '—';
-    const epoch = Number(val);
-    if (!isNaN(epoch) && epoch > 0) {
+    const strVal = val.trim();
+    if (strVal === '') return '—';
+    const epoch = Number(strVal);
+    if (!isNaN(epoch)) {
       const d = new Date(epoch);
       return d.toLocaleDateString('en-ZA', { year: 'numeric', month: 'short', day: '2-digit' });
     }

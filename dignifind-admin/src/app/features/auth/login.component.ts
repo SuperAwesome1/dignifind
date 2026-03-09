@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
       <div class="df-login-card">
 
         <!-- Logo -->
-        <img src="/logo.png" alt="DigniFind Logo" class="df-login-logo"
+        <img src="logo.png" alt="DigniFind Logo" class="df-login-logo"
              onerror="this.style.display='none'" />
 
         <h1 class="df-login-title">Welcome back</h1>

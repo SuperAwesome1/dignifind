@@ -14,7 +14,7 @@ import { ThemeService } from '../../../core/services/theme.service';
     <nav class="df-navbar" role="navigation" aria-label="Main navigation">
       <!-- Brand -->
       <a class="df-brand" routerLink="/funerals" aria-label="DigniFind Home">
-        <img src="/logo.png" alt="DigniFind Logo" class="df-logo" />
+        <img src="logo.png" alt="DigniFind Logo" class="df-logo" />
       </a>
 
       <!-- Desktop nav links -->
