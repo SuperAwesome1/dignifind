@@ -45,6 +45,12 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
             gap: .5rem;
             &:hover { border-color: var(--primary); background: rgba(91,108,255,.04); }
         }
+        .img-slot.is-portrait {
+            aspect-ratio: 3 / 4;
+            width: auto;
+            max-width: 240px;
+            min-height: 200px;
+        }
         .img-slot-preview {
             position: absolute; inset: 0;
             background-size: cover; background-position: center;
@@ -133,7 +139,7 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
     `],
   template: `
     <app-navbar></app-navbar>
-
+ 
     <main class="df-page">
       <div class="df-page-header">
         <div>
@@ -141,11 +147,11 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
           <p style="margin:0;font-size:.85rem;color:var(--text-muted)">Customise your brand images, fonts and colours</p>
         </div>
       </div>
-
+ 
       @if (loading()) {
         <div class="df-spinner"></div>
       } @else {
-
+ 
         <!-- ── Images ─────────────────────────────────────── -->
         <div class="df-card" style="margin-bottom:1.5rem">
           <p class="section-label">Brand Images</p>
@@ -156,11 +162,11 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
                   {{ slot.label }}
                   <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)"> — {{ slot.hint }}</span>
                 </p>
-                <div class="img-slot" (click)="triggerFileInput(slot.key)">
+                <div class="img-slot" [class.is-portrait]="slot.key === 'background'" (click)="triggerFileInput(slot.key)">
                   <!-- Preview -->
                   @if (slot.url) {
-                    <div class="img-slot-preview" style="background: none;">
-                      <img [src]="slot.url" alt="Preview Image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; z-index: 1;" />
+                    <div class="img-slot-preview" style="background: #f8f9fa;">
+                      <img [src]="slot.url" alt="Preview Image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border-radius: inherit; z-index: 1;" />
                       <span class="img-change-badge" style="position: relative; z-index: 2;">Change</span>
                     </div>
                   } @else {

@@ -11,16 +11,6 @@ import { ProfileData } from '../../models/profile.model';
       <div class="container">
         <div class="footer-grid">
 
-          <!-- Location (New) -->
-          @if (locationName) {
-            <div class="footer-item text-center">
-              <a [href]="locationUrl" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Location" [style.color]="footerColor">
-                <i class="bi bi-geo-alt-fill footer-icon"></i>
-              </a>
-              <p class="footer-contact"><a [href]="locationUrl" target="_blank" rel="noopener" [style.color]="footerColor">{{ locationName }}</a></p>
-            </div>
-          }
-
           <!-- Contact Number -->
           @if (phone) {
             <div class="footer-item text-center">
@@ -56,6 +46,16 @@ import { ProfileData } from '../../models/profile.model';
                 <i class="bi bi-envelope-fill footer-icon"></i>
               </a>
               <p class="footer-contact"><a [href]="'mailto:' + email" [style.color]="footerColor">{{ email }}</a></p>
+            </div>
+          }
+
+          <!-- Location (New) -->
+          @if (locationName) {
+            <div class="footer-item text-center">
+              <a [href]="locationUrl" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Location" [style.color]="footerColor">
+                <i class="bi bi-geo-alt-fill footer-icon"></i>
+              </a>
+              <p class="footer-contact"><a [href]="locationUrl" target="_blank" rel="noopener" [style.color]="footerColor">{{ locationName }}</a></p>
             </div>
           }
 
