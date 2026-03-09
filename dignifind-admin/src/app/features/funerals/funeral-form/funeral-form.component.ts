@@ -316,7 +316,7 @@ export class FuneralFormComponent implements OnInit {
       const graveNumber = this.form.value.graveNumber?.trim();
       const exists = await this.funeralService.graveNumberExists(graveNumber).catch(() => false);
       if (exists) {
-        this.error = `Grave number "${graveNumber}" already exists. Please use a different number.`;
+        this.error = `Grave number "${graveNumber}" already exists. Please use a different abbreviation.`;
         this.loading = false;
         return;
       }

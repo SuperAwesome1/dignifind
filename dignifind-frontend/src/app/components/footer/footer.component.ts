@@ -1,44 +1,87 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ProfileData } from '../../models/profile.model';
 
 @Component({
-    selector: 'app-footer',
-    standalone: true,
-    template: `
+  selector: 'app-footer',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <footer class="site-footer">
       <div class="container">
         <div class="footer-grid">
-          <div class="footer-item text-center">
-            <a href="tel:0615240262" class="footer-icon-link" aria-label="Call us">
-              <span class="footer-icon">📞</span>
-            </a>
-            <p class="footer-contact"><a href="tel:0615240262">0615240262</a></p>
-          </div>
 
-          <div class="footer-item text-center">
-            <h3 class="emergency-label"><strong>24hr/Emergency</strong></h3>
-            <p class="footer-contact"><a href="tel:0615838449">0615838449</a></p>
-          </div>
+          <!-- Contact Number -->
+          @if (phone) {
+            <div class="footer-item text-center">
+              <a [href]="'tel:' + phone" class="footer-icon-link" aria-label="Call us">
+                <span class="footer-icon">📞</span>
+              </a>
+              <p class="footer-contact"><a [href]="'tel:' + phone">{{ phone }}</a></p>
+            </div>
+          }
 
-          <div class="footer-item text-center">
-            <a href="https://wa.me/0826576797" class="footer-icon-link" target="_blank" rel="noopener" aria-label="WhatsApp">
-              <span class="footer-icon">💬</span>
-            </a>
-            <p class="footer-contact"><a href="https://wa.me/0826576797" target="_blank" rel="noopener">0826576797</a></p>
-          </div>
+          <!-- Emergency Number -->
+          @if (emergency) {
+            <div class="footer-item text-center">
+              <h3 class="emergency-label"><strong>24hr/Emergency</strong></h3>
+              <p class="footer-contact"><a [href]="'tel:' + emergency">{{ emergency }}</a></p>
+            </div>
+          }
 
-          <div class="footer-item text-center">
-            <a href="mailto:thalimash@yahoo.com" class="footer-icon-link" aria-label="Email us">
-              <span class="footer-icon">✉️</span>
-            </a>
-            <p class="footer-contact"><a href="mailto:thalimash@yahoo.com">thalimash&#64;yahoo.com</a></p>
-          </div>
+          <!-- WhatsApp -->
+          @if (whatsapp) {
+            <div class="footer-item text-center">
+              <a [href]="whatsappUrl" class="footer-icon-link" target="_blank" rel="noopener" aria-label="WhatsApp">
+                <span class="footer-icon">💬</span>
+              </a>
+              <p class="footer-contact"><a [href]="whatsappUrl" target="_blank" rel="noopener">{{ whatsapp }}</a></p>
+            </div>
+          }
 
-          <div class="footer-item text-center">
-            <a href="https://www.google.com/maps/place/Mashigo's+Funeral+Services/@-25.3931444,28.1587022" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Head Office">
-              <span class="footer-icon">📍</span>
-            </a>
-            <p class="footer-contact">Head Office</p>
-          </div>
+          <!-- Email -->
+          @if (email) {
+            <div class="footer-item text-center">
+              <a [href]="'mailto:' + email" class="footer-icon-link" aria-label="Email us">
+                <span class="footer-icon">✉️</span>
+              </a>
+              <p class="footer-contact"><a [href]="'mailto:' + email">{{ email }}</a></p>
+            </div>
+          }
+
+          <!-- Social Pages -->
+          @if (hasSocials) {
+            <div class="footer-item text-center">
+              <div class="social-icons">
+                @if (profile?.socialPages?.facebook) {
+                  <a [href]="profile!.socialPages!.facebook" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Facebook">
+                    <span class="footer-icon">📘</span>
+                  </a>
+                }
+                @if (profile?.socialPages?.instagram) {
+                  <a [href]="profile!.socialPages!.instagram" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Instagram">
+                    <span class="footer-icon">📸</span>
+                  </a>
+                }
+                @if (profile?.socialPages?.twitter) {
+                  <a [href]="profile!.socialPages!.twitter" target="_blank" rel="noopener" class="footer-icon-link" aria-label="Twitter">
+                    <span class="footer-icon">🐦</span>
+                  </a>
+                }
+                @if (profile?.socialPages?.linkedin) {
+                  <a [href]="profile!.socialPages!.linkedin" target="_blank" rel="noopener" class="footer-icon-link" aria-label="LinkedIn">
+                    <span class="footer-icon">💼</span>
+                  </a>
+                }
+                @if (profile?.socialPages?.youtube) {
+                  <a [href]="profile!.socialPages!.youtube" target="_blank" rel="noopener" class="footer-icon-link" aria-label="YouTube">
+                    <span class="footer-icon">▶️</span>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+
         </div>
 
         <div class="powered-by text-center">
@@ -47,6 +90,21 @@ import { Component } from '@angular/core';
       </div>
     </footer>
   `,
-    styleUrl: './footer.component.scss'
+  styleUrl: './footer.component.scss'
 })
-export class FooterComponent { }
+export class FooterComponent {
+  @Input() profile: ProfileData | null = null;
+
+  get phone(): string { return this.profile?.contactNumber ?? ''; }
+  get emergency(): string { return this.profile?.emergencyNumber ?? ''; }
+  get whatsapp(): string { return this.profile?.whatsappNumber ?? ''; }
+  get email(): string { return this.profile?.email ?? ''; }
+  get whatsappUrl(): string {
+    const n = this.whatsapp.replace(/\D/g, '');
+    return `https://wa.me/${n}`;
+  }
+  get hasSocials(): boolean {
+    const s = this.profile?.socialPages;
+    return !!(s?.facebook || s?.instagram || s?.twitter || s?.linkedin || s?.youtube);
+  }
+}

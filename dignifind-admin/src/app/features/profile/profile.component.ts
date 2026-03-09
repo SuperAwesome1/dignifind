@@ -64,17 +64,6 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
             transition: width .2s; border-radius: 0 2px 2px 0;
         }
 
-        .typo-table { width: 100%; border-collapse: collapse; }
-        .typo-table th, .typo-table td {
-            padding: .6rem .75rem; border-bottom: 1px solid var(--border);
-            text-align: left; font-size: .85rem;
-        }
-        .typo-table th {
-            font-size: .72rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .06em; color: var(--text-muted);
-        }
-        .typo-table tr:last-child td { border-bottom: none; }
-
         .df-select-sm, .color-input-wrap {
             display: inline-flex; align-items: center; gap: .4rem;
         }
@@ -248,7 +237,7 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
         <div class="df-card" style="margin-bottom:5rem">
           <p class="section-label">Typography Styles</p>
           <div class="df-table-wrap" style="margin-bottom:1.5rem">
-            <table class="typo-table">
+            <table class="df-table">
               <thead>
                 <tr>
                   <th>Tag</th>
@@ -259,8 +248,8 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
               <tbody>
                 @for (tag of typoTags; track tag) {
                   <tr>
-                    <td><span class="tag-label">{{ tag }}</span></td>
-                    <td>
+                    <td data-label="Tag"><span class="tag-label">{{ tag }}</span></td>
+                    <td data-label="Font family">
                       @if (tag !== 'hr') {
                         <div class="df-select-sm">
                           <select [(ngModel)]="typo[tag]['fontFamily']" (ngModelChange)="markDirty()">
@@ -273,7 +262,7 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
                         <span style="color:var(--text-muted);font-size:.8rem">—</span>
                       }
                     </td>
-                    <td>
+                    <td data-label="Colour">
                       <div class="color-input-wrap">
                         <div class="color-swatch" [style.background]="typo[tag]['color']">
                           <input type="color" [ngModel]="typo[tag]['color']"

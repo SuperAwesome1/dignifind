@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FuneralService } from '../../core/services/funeral.service';
 import { Funeral } from '../../core/models/funeral.model';
@@ -48,10 +48,10 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
             } @else {
               @for (f of filtered; track f.id) {
                 <tr>
-                  <td>{{ f.firstName }}</td>
-                  <td style="font-weight:500">{{ f.surname }}</td>
-                  <td>{{ formatDate(f.dateOfFuneral) }}</td>
-                  <td>
+                  <td data-label="First Name">{{ f.firstName }}</td>
+                  <td data-label="Surname" style="font-weight:500">{{ f.surname }}</td>
+                  <td data-label="Date of Burial">{{ formatDate(f.dateOfFuneral) }}</td>
+                  <td data-label="Area">
                     @if (f.area) { <span class="df-badge">{{ f.area }}</span> }
                   </td>
                 </tr>
@@ -65,6 +65,7 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 })
 export class SearchComponent implements OnInit {
   private funeralService = inject(FuneralService);
+  private cdr = inject(ChangeDetectorRef);
 
   funerals: Funeral[] = [];
   filtered: Funeral[] = [];
@@ -75,6 +76,7 @@ export class SearchComponent implements OnInit {
       this.funerals = data;
       this.filtered = data;
       this.loading = false;
+      this.cdr.detectChanges();
     });
   }
 

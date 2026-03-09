@@ -508,7 +508,12 @@ p {
     font-size: .875rem;
 
     thead tr {
+        display: none; // hidden on mobile
         background: var(--bg-elevated);
+
+        @media (min-width: 768px) {
+            display: table-row;
+        }
 
         th {
             padding: .75rem 1rem;
@@ -525,8 +530,16 @@ p {
 
     tbody {
         tr {
+            display: flex;
+            flex-direction: column;
+            padding: .75rem 0;
             transition: background .12s;
             border-bottom: 1px solid var(--border);
+
+            @media (min-width: 768px) {
+                display: table-row;
+                padding: 0;
+            }
 
             &:last-child {
                 border-bottom: none;
@@ -538,9 +551,44 @@ p {
         }
 
         td {
-            padding: .85rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .6rem 1.25rem;
             color: var(--text-primary);
-            vertical-align: middle;
+            text-align: right;
+            gap: 1rem;
+
+            &[colspan] {
+                justify-content: center;
+                text-align: center;
+            }
+
+            @media (min-width: 768px) {
+                display: table-cell;
+                text-align: left;
+                vertical-align: middle;
+                padding: .85rem 1rem;
+            }
+
+            &::before {
+                content: attr(data-label);
+                font-size: .75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                color: var(--text-muted);
+                text-align: left;
+
+                @media (min-width: 768px) {
+                    display: none;
+                }
+            }
+
+            // Adjust actions container on mobile to align right
+            >div {
+                justify-content: flex-end;
+            }
         }
     }
 }

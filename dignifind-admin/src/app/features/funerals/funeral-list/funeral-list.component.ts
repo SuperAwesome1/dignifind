@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FuneralService } from '../../../core/services/funeral.service';
@@ -62,16 +62,16 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
             } @else {
               @for (f of filtered; track f.id) {
                 <tr>
-                  <td style="font-weight:500">{{ f.firstName }} {{ f.surname }}</td>
-                  <td>{{ formatDate(f.dateOfBirth) }}</td>
-                  <td>{{ formatDate(f.dateOfDeath) }}</td>
-                  <td>{{ formatDate(f.dateOfFuneral) }}</td>
-                  <td>
+                  <td data-label="Full Name" style="font-weight:500">{{ f.firstName }} {{ f.surname }}</td>
+                  <td data-label="Birth Date">{{ formatDate(f.dateOfBirth) }}</td>
+                  <td data-label="Death Date">{{ formatDate(f.dateOfDeath) }}</td>
+                  <td data-label="Burial Date">{{ formatDate(f.dateOfFuneral) }}</td>
+                  <td data-label="Area">
                     @if (f.area) {
                       <span class="df-badge">{{ f.area }}</span>
                     }
                   </td>
-                  <td>
+                  <td data-label="Actions">
                     <div style="display:flex;gap:.4rem;flex-wrap:wrap">
                       <a class="df-btn df-btn-ghost df-btn-sm" [routerLink]="['/funerals', f.id, 'edit']">
                         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -105,6 +105,7 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
 })
 export class FuneralListComponent implements OnInit {
   private funeralService = inject(FuneralService);
+  private cdr = inject(ChangeDetectorRef);
 
   funerals: Funeral[] = [];
   filtered: Funeral[] = [];
@@ -115,6 +116,7 @@ export class FuneralListComponent implements OnInit {
       this.funerals = data;
       this.filtered = data;
       this.loading = false;
+      this.cdr.detectChanges();
     });
   }
 
