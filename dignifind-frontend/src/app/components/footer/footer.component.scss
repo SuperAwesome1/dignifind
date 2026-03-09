@@ -1,5 +1,4 @@
 footer.site-footer {
-    background: #C59842;
     padding: 25px 0 5px;
     box-shadow: 0 0 20px -10px rgba(0, 0, 0, 0.8);
 }
@@ -35,7 +34,6 @@ footer.site-footer {
 }
 
 .emergency-label {
-    color: white;
     font-size: 1rem;
     margin: 0 0 6px 0;
 }
@@ -44,7 +42,6 @@ footer.site-footer {
     margin: 4px 0 0;
 
     a {
-        color: white;
         text-decoration: none;
         font-size: 0.9rem;
 
@@ -60,13 +57,8 @@ footer.site-footer {
     padding-top: 12px;
 
     p {
-        color: rgba(255, 255, 255, 0.8);
         font-size: 0.85rem;
         margin: 0;
-    }
-
-    a {
-        color: white;
     }
 }
 

@@ -31,6 +31,14 @@ export interface ProfileData {
         p: TypographyStyle;
         hr: { color: string };
     };
+    location?: {
+        name: string;
+        url: string;
+    };
+    footerSettings?: {
+        backgroundColor: string;
+        fontColor: string;
+    };
 }
 
 export const DEFAULT_TYPOGRAPHY: NonNullable<ProfileData['typography']> = {

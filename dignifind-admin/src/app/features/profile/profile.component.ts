@@ -90,9 +90,6 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
             background: var(--bg-elevated); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 1.25rem 1.5rem;
         }
-        .save-overlay {
-            position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 500;
-        }
         .df-input-group {
             display: flex;
             flex-direction: column;
@@ -162,8 +159,9 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
                 <div class="img-slot" (click)="triggerFileInput(slot.key)">
                   <!-- Preview -->
                   @if (slot.url) {
-                    <div class="img-slot-preview" [style.background-image]="'url(' + slot.url + ')'">
-                      <span class="img-change-badge">Change</span>
+                    <div class="img-slot-preview" style="background: none;">
+                      <img [src]="slot.url" alt="Preview Image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; z-index: 1;" />
+                      <span class="img-change-badge" style="position: relative; z-index: 2;">Change</span>
                     </div>
                   } @else {
                     <!-- Placeholder icon -->
@@ -186,9 +184,47 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
           </div>
         </div>
 
-        <!-- ── Contact Details ─────────────────────────────── -->
+        <!-- ── Footer & Contact ─────────────────────────── -->
         <div class="df-card" style="margin-bottom:1.5rem">
-          <p class="section-label">Contact Details</p>
+          <p class="section-label">Footer Settings</p>
+          
+          <div style="display:grid; grid-template-columns:1fr; gap:1.5rem; margin-bottom:1.5rem;">
+            <!-- Colors -->
+            <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+              <div class="color-input-wrap">
+                <label style="font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Background Colour</label>
+                <div style="display:flex; align-items:center; gap:0.5rem">
+                  <div class="color-swatch" [style.background]="footerSettings.backgroundColor">
+                    <input type="color" [(ngModel)]="footerSettings.backgroundColor" (ngModelChange)="markDirty()" />
+                  </div>
+                  <span style="font-size:.8rem;color:var(--text-secondary)">{{ footerSettings.backgroundColor }}</span>
+                </div>
+              </div>
+              <div class="color-input-wrap">
+                <label style="font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Font Colour</label>
+                <div style="display:flex; align-items:center; gap:0.5rem">
+                  <div class="color-swatch" [style.background]="footerSettings.fontColor">
+                    <input type="color" [(ngModel)]="footerSettings.fontColor" (ngModelChange)="markDirty()" />
+                  </div>
+                  <span style="font-size:.8rem;color:var(--text-secondary)">{{ footerSettings.fontColor }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="contact-grid">
+              <div class="df-input-group">
+                <label>📍 Business / Location Name</label>
+                <input type="text" [(ngModel)]="location.name" (ngModelChange)="markDirty()" placeholder="e.g. Pretoria North Branch" />
+              </div>
+              <div class="df-input-group">
+                <label>🗺️ Google Maps URL</label>
+                <input type="url" [(ngModel)]="location.url" (ngModelChange)="markDirty()" placeholder="https://goo.gl/maps/..." />
+              </div>
+            </div>
+          </div>
+
+          <p style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.75rem">Contact Details</p>
           <div class="contact-grid">
             <div class="df-input-group">
               <label>📞 Contact Number</label>
@@ -293,13 +329,13 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
 
       }
 
-      @if (saveError()) {
-        <div class="df-alert df-alert-danger" style="position:fixed;bottom:5rem;right:1.5rem;z-index:501">{{ saveError() }}</div>
-      }
+      <!-- Actions -->
+      <div style="display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; margin-bottom: 2rem;">
+        @if (saveError()) {
+          <div class="df-alert df-alert-danger" style="width: 100%;">{{ saveError() }}</div>
+        }
 
-      <!-- Sticky save button -->
-      <div class="save-overlay">
-        <button class="df-btn df-btn-primary" (click)="save()" [disabled]="saving() || loading()">
+        <button class="df-btn df-btn-primary" (click)="save()" [disabled]="!isDirty || saving() || loading()">
           @if (saving()) {
             <svg style="animation:df-spin .7s linear infinite" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a10 10 0 100 10"/>
@@ -337,10 +373,16 @@ export class ProfileComponent implements OnInit {
   };
   social: SocialPages = {};
 
+  location: { name: string; url: string } = { name: '', url: '' };
+  footerSettings: { backgroundColor: string; fontColor: string } = {
+    backgroundColor: '#1a2035',
+    fontColor: '#ffffff'
+  };
+
   imageSlots: ImageSlot[] = [
     { key: 'background', label: 'Background Image', hint: 'full-page background', icon: '🖼️', url: '', progress: 0, uploading: false },
     { key: 'logo', label: 'Logo', hint: 'company logo', icon: '🔖', url: '', progress: 0, uploading: false },
-    { key: 'header', label: 'Header Image', hint: 'page header banner', icon: '📸', url: '', progress: 0, uploading: false },
+    { key: 'header', label: 'Cover Image', hint: 'Cover photo on link', icon: '📸', url: '', progress: 0, uploading: false },
   ];
 
   private uid = '';
@@ -362,6 +404,13 @@ export class ProfileComponent implements OnInit {
     this.contact.whatsappNumber = profile.whatsappNumber ?? '';
     this.contact.email = profile.email ?? '';
     this.social = { ...profile.socialPages };
+
+    if (profile.location) {
+      this.location = { ...profile.location };
+    }
+    if (profile.footerSettings) {
+      this.footerSettings = { ...profile.footerSettings };
+    }
 
     if (profile.typography) {
       for (const tag of this.typoTags) {
@@ -414,20 +463,30 @@ export class ProfileComponent implements OnInit {
     this.saving.set(true);
     this.saveError.set('');
     try {
+      // Firebase Realtime DB does not accept `undefined`. 
+      // We pass `null` or the string value directly so it doesn't throw.
       await this.profileService.saveProfile({
         typography: this.typo as any,
-        contactNumber: this.contact.contactNumber || undefined,
-        emergencyNumber: this.contact.emergencyNumber || undefined,
-        whatsappNumber: this.contact.whatsappNumber || undefined,
-        email: this.contact.email || undefined,
+        contactNumber: this.contact.contactNumber || null,
+        emergencyNumber: this.contact.emergencyNumber || null,
+        whatsappNumber: this.contact.whatsappNumber || null,
+        email: this.contact.email || null,
         socialPages: {
-          facebook: this.social.facebook || undefined,
-          instagram: this.social.instagram || undefined,
-          twitter: this.social.twitter || undefined,
-          linkedin: this.social.linkedin || undefined,
-          youtube: this.social.youtube || undefined,
+          facebook: this.social.facebook || null,
+          instagram: this.social.instagram || null,
+          twitter: this.social.twitter || null,
+          linkedin: this.social.linkedin || null,
+          youtube: this.social.youtube || null,
         },
-      });
+        location: {
+          name: this.location.name || '',
+          url: this.location.url || ''
+        },
+        footerSettings: {
+          backgroundColor: this.footerSettings.backgroundColor,
+          fontColor: this.footerSettings.fontColor
+        }
+      } as any);
       this.isDirty = false;
     } catch (e: any) {
       this.saveError.set(e.message);
