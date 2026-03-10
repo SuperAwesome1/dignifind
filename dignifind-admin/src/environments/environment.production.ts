@@ -9,4 +9,5 @@ export const environment = {
         storageBucket: 'dignifind.appspot.com',
         messagingSenderId: '19644371771',
     },
+    frontendUrl: 'https://dignifind.co.za/v2'
 };

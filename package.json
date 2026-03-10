@@ -11,8 +11,11 @@
     "scripts": {
         "admin": "npm run start --workspace=dignifind-admin",
         "frontend": "npm run start --workspace=dignifind-frontend",
-        "build:admin": "npm run build --workspace=dignifind-admin",
-        "build:frontend": "npm run build --workspace=dignifind-frontend",
+        "build:admin": "npm run build --workspace=dignifind-admin -- --base-href /admin/v2/",
+        "build:frontend": "npm run build --workspace=dignifind-frontend -- --base-href /v2/",
+        "zip:admin": "rm -f admin-build.zip && (cd dignifind-admin/dist/dignifind-admin/browser && zip -r ../../../../admin-build.zip .)",
+        "zip:frontend": "rm -f frontend-build.zip && (cd dignifind-frontend/dist/dignifind-frontend/browser && zip -r ../../../../frontend-build.zip .)",
+        "build:prod": "npm run build:admin && npm run build:frontend && npm run zip:admin && npm run zip:frontend",
         "install:all": "npm install"
     },
     "engines": {

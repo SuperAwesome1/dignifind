@@ -6,6 +6,7 @@ import { FuneralService } from '../../../core/services/funeral.service';
 import { StorageService } from '../../../core/services/storage.service';
 import { ProfileService } from '../../../core/services/profile.service';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-funeral-form',
@@ -336,13 +337,13 @@ export class FuneralFormComponent implements OnInit {
   }
 
   getBrandedUrl(): string {
-    const host = window.location.origin.replace(':4200', ':4201');
-    const provider = this.slug || (this.funeralService as any).authService.uid; // fallback but ideally we have slug
+    const host = environment.frontendUrl;
+    const provider = this.slug || (this.funeralService as any).authService.uid;
     return `${host}/${provider}/${this.form.value.graveNumber}`;
   }
 
   getShortUrl(): string {
-    const host = window.location.origin.replace(':4200', ':4201');
+    const host = environment.frontendUrl;
     return `${host}/s/${this.shortId}`;
   }
 

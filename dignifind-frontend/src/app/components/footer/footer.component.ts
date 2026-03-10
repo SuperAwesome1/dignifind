@@ -95,7 +95,7 @@ import { ProfileData } from '../../models/profile.model';
         </div>
 
         <div class="powered-by text-center" style="border-top-color: rgba(255,255,255,0.2)">
-          <p [style.color]="footerColor" style="opacity: 0.8">Powered by <a href="http://dignifind.co.za" target="_blank" rel="noopener" [style.color]="footerColor">www.dignifind.co.za</a></p>
+          <p [style.color]="footerColor" style="opacity: 0.8">Powered by <a href="https://dignifind.co.za" target="_blank" rel="noopener" [style.color]="footerColor">www.dignifind.co.za</a></p>
         </div>
       </div>
     </footer>

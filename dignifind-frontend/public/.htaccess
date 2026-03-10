@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Set the base path to our subfolder
+  RewriteBase /v2/
+  
+  # Don't rewrite if the request is for index.html
+  RewriteRule ^index\.html$ - [L]
+  
+  # If the requested file or directory doesn't exist, redirect to index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /v2/index.html [L]
+</IfModule>

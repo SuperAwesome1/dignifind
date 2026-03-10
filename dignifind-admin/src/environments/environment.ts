@@ -9,5 +9,6 @@ export const environment = {
         projectId: 'dignifind',
         storageBucket: 'dignifind.appspot.com',
         messagingSenderId: '19644371771',
-    }
+    },
+    frontendUrl: 'http://localhost:4201'
 };

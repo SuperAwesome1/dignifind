@@ -158,12 +158,12 @@ type TypoTag = typeof TYPOGRAPHY_TAGS[number];
           <div class="df-input-group">
             <label>Public Profile URL Handle</label>
             <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">
-                <span style="color: var(--text-muted); font-size: 0.85rem; white-space: nowrap;">dignifind.com/</span>
+                <span style="color: var(--text-muted); font-size: 0.85rem; white-space: nowrap;">dignifind.co.za/v2/</span>
                 <input type="text" [(ngModel)]="slug" (ngModelChange)="markDirty()" placeholder="your-business-name" 
                        style="border: none; background: transparent; padding: 0; font-weight: 600;" />
             </div>
             <p style="font-size: .7rem; color: var(--text-muted); margin-top: 0.35rem;">
-                This creates a cleaner link for customers: <strong>dignifind.com/{{ slug || 'your-business' }}/...</strong>
+                This creates a cleaner link for customers: <strong>dignifind.co.za/v2/{{ slug || 'your-business' }}/...</strong>
             </p>
           </div>
         </div>
